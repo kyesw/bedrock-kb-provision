@@ -702,7 +702,7 @@ class KnowledgeBasesForAmazonBedrock:
                 f"delete, and recreate the index"
             )
 
-    @retry(wait_random_min=1000, wait_random_max=2000, stop_max_attempt_number=7)
+    @retry(wait_random_min=1000, wait_random_max=2000, stop_max_attempt_number=30)
     def create_knowledge_base(
         self,
         collection_arn: str,
@@ -796,6 +796,8 @@ class KnowledgeBasesForAmazonBedrock:
             )
             kb = response["knowledgeBase"]
             pp.pprint(kb)
+        except Exception as e:
+            pp.pprint("some other exception: " + str(e))
 
         # Create a DataSource in KnowledgeBase
         try:
@@ -1054,23 +1056,25 @@ if __name__ == "__main__":
 
     print(data)
     if args.mode == "create":
+        kb.upload_directory(
+            f'{current_dir}/{data["kb_files_path"]}', kb.get_data_bucket_name()
+        )
+
         kb_id, ds_id = kb.create_or_retrieve_knowledge_base(
             data["knowledge_base_name"], data["knowledge_base_description"]
         )
         print(f"Knowledge Base ID: {kb_id}")
         print(f"Data Source ID: {ds_id}")
-        kb.upload_directory(
-            f'{current_dir}/{data["kb_files_path"]}', kb.get_data_bucket_name()
-        )
-        kb.synchronize_data(kb_id, ds_id)
-        smm_client.put_parameter(
-            Name=f"{data['knowledge_base_name']}-kb-id",
-            Description=f"{data['knowledge_base_name']} kb id",
-            Value=kb_id,
-            Type="String",
-            Overwrite=True,
-        )
+        
+        # kb.synchronize_data(kb_id, ds_id)
+        # smm_client.put_parameter(
+        #     Name=f"{data['knowledge_base_name']}-kb-id",
+        #     Description=f"{data['knowledge_base_name']} kb id",
+        #     Value=kb_id,
+        #     Type="String",
+        #     Overwrite=True,
+        # )
 
     if args.mode == "delete":
         kb.delete_kb(data["knowledge_base_name"])
-        smm_client.delete_parameter(Name=f"{data['knowledge_base_name']}-kb-id")
+        # smm_client.delete_parameter(Name=f"{data['knowledge_base_name']}-kb-id")
