@@ -1056,16 +1056,16 @@ if __name__ == "__main__":
 
     print(data)
     if args.mode == "create":
-        kb.upload_directory(
-            f'{current_dir}/{data["kb_files_path"]}', kb.get_data_bucket_name()
-        )
+        
 
         kb_id, ds_id = kb.create_or_retrieve_knowledge_base(
             data["knowledge_base_name"], data["knowledge_base_description"]
         )
         print(f"Knowledge Base ID: {kb_id}")
         print(f"Data Source ID: {ds_id}")
-        
+        kb.upload_directory(
+            f'{current_dir}/{data["kb_files_path"]}', kb.get_data_bucket_name()
+        )
         # kb.synchronize_data(kb_id, ds_id)
         # smm_client.put_parameter(
         #     Name=f"{data['knowledge_base_name']}-kb-id",
