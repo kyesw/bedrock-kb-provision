@@ -1,4 +1,4 @@
-knowledge_base_name: 'ecommerce-workshop-kb'
+knowledge_base_name: 'workshop-kb'
 knowledge_base_description: ''
 kb_files_path: 'kb_files'
 table_name: 'restaurant-assistant-bookings'
