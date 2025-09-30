@@ -11,3 +11,4 @@ strands-agents-tools
 streamlit
 pillow
 bedrock-agentcore-starter-toolkit
+pydantic
