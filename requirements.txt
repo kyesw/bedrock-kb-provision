@@ -8,3 +8,5 @@ retrying
 pandas
 strands-agents
 strands-agents-tools
+streamlit
+pillow
